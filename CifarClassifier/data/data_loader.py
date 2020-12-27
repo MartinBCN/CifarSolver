@@ -1,38 +1,69 @@
-import os
+from pathlib import Path
+from typing import Union
 
-import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
-from torchvision.datasets import CIFAR10
+import torch
+from PIL import Image
+from torch.utils.data import DataLoader, Dataset
+import torchvision.transforms.functional as tf
 
 
-class CifarLoader(object):
+classes = ('airplane', 'automobile', 'bird', 'cat',
+           'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-    classes = ('plane', 'car', 'bird', 'cat',
-               'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+CLASSES = {l: i for (i, l) in enumerate(classes)}
 
-    def __init__(self):
-        self.transform = transforms.Compose(
-            [transforms.ToTensor(),
-             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    def get_train_validation(self):
+class CifarDataset(Dataset):
+    def __init__(self, data_dir: Union[str, Path]):
+        if type(data_dir) is str:
+            data_dir = Path(data_dir)
 
-        trainset = CIFAR10(root=os.environ['DATA_DIR'], train=True, download=True, transform=self.transform)
-        print(type(trainset))
+        self.files = []
+        self.labels = []
+        for file in data_dir.rglob('*.png'):
+            self.files.append(file)
+            self.labels.append(file.parents[0].name)
 
-        trainloader = DataLoader(trainset, batch_size=4, shuffle=True, num_workers=2)
+    def transform(self, image: Image, label: str):
 
-        return trainloader
+        image = tf.to_tensor(image)
+        image = tf.normalize(image, (0.5,), (0.5, ))
+        # transform = transforms.Compose(
+        #     [transforms.ToTensor(),
+        #      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    def get_test(self):
+        label = torch.tensor(CLASSES[label.lower()])
 
-        testset = CIFAR10(root='./data', train=False, download=True, transform=self.transform)
-        testloader = DataLoader(testset, batch_size=4, shuffle=False, num_workers=2)
+        return image, label
 
-        return testloader
+    def __getitem__(self, item):
+        image = self.files[item]
+        image = Image.open(image).convert('RGB')
+        label = self.labels[item]
+
+        image, label = self.transform(image, label)
+        return image, label
+
+    def __len__(self):
+        return len(self.labels)
+
+
+def get_data_loader(phase: str, data_dir: Union[str, Path], batch_size: int = 4) -> dict:
+    dataset = CifarDataset(data_dir / phase.lower())
+    if phase == 'test':
+        data_loader = {'test': DataLoader(dataset, batch_size=batch_size)}
+    else:
+        split = [int(len(dataset) * 0.8), int(len(dataset) * 0.2)]
+        train, validation = torch.utils.data.random_split(dataset, split, generator=torch.Generator().manual_seed(42))
+        data_loader = {'train': DataLoader(train, batch_size=batch_size),
+                       'validation': DataLoader(validation, batch_size=batch_size)}
+    return data_loader
 
 
 if __name__ == '__main__':
-    os.environ['DATA_DIR'] = '/home/martin/Programming/Python/DeepLearning/Cifar10/data'
-    loader = CifarLoader()
-    train = loader.get_train_validation()
+    data = Path('/home/martin/Programming/Python/DeepLearning/Cifar10/data/cifar10_raw')
+
+    loader = get_data_loader('train', data)
+
+    print(len(loader['train']))
+    print(len(loader['validation']))
