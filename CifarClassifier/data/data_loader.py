@@ -51,12 +51,12 @@ class CifarDataset(Dataset):
 def get_data_loader(phase: str, data_dir: Union[str, Path], batch_size: int = 4) -> dict:
     dataset = CifarDataset(data_dir / phase.lower())
     if phase == 'test':
-        data_loader = {'test': DataLoader(dataset, batch_size=batch_size)}
+        data_loader = {'test': DataLoader(dataset, batch_size=batch_size, shuffle=True)}
     else:
         split = [int(len(dataset) * 0.8), int(len(dataset) * 0.2)]
         train, validation = torch.utils.data.random_split(dataset, split, generator=torch.Generator().manual_seed(42))
-        data_loader = {'train': DataLoader(train, batch_size=batch_size),
-                       'validation': DataLoader(validation, batch_size=batch_size)}
+        data_loader = {'train': DataLoader(train, batch_size=batch_size, shuffle=True),
+                       'validation': DataLoader(validation, batch_size=batch_size, shuffle=True)}
     return data_loader
 
 

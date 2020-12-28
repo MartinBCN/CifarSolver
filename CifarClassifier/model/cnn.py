@@ -1,3 +1,6 @@
+from pathlib import Path
+
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -20,4 +23,16 @@ class CifarCNN(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+
+    def predict(self, x):
+        x = self.forward(x)
+        _, predicted = torch.max(x, 1)
+
+        return predicted
+
+
+# if __name__ == '__main__':
+#     fn = Path('/home/martin/Programming/Python/DeepLearning/Cifar10/data/cifar10_raw/train/Airplane/aeroplane_s_000004.png')
+#     img =
+
 
