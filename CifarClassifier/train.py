@@ -2,7 +2,7 @@ import itertools
 from pathlib import Path
 
 from data.data_loader import get_data_loader
-from model.torch_wrapper import TorchWrapper
+from model.image_classifier import ImageClassifier
 import matplotlib.pyplot as plt
 
 model_dir = '/home/martin/Programming/Python/DeepLearning/Cifar10/models'
@@ -11,12 +11,12 @@ data = Path('/home/martin/Programming/Python/DeepLearning/Cifar10/data/cifar10_r
 
 name = 'test1'
 
-model = TorchWrapper()
-
+model = ImageClassifier('cnn')
+model.set_optimizer()
 
 train_loader = get_data_loader('train', data)
 
-model.train(train_loader, 10)
+model.train(train_loader, 1)
 
 phases = ['train', 'validation']
 fields = ['batch_loss', 'epoch_loss', 'accuracy']

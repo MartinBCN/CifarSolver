@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from sklearn.metrics import confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 from data.data_loader import get_data_loader
 from model.torch_wrapper import TorchWrapper

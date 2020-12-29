@@ -133,3 +133,4 @@ dmypy.json
 /models/
 /figures/
 /test.py
+/tmp
