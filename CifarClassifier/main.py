@@ -50,6 +50,7 @@ async def predict(file: UploadFile = File(...)):
         image = Image.open(io.BytesIO(contents)).convert('RGB')
 
         predicted_class = image_classifier.predict(image)
+        predicted_class = image_classifier.classes[predicted_class]
 
         logging.info(f"Predicted Class: {predicted_class}")
         return {

@@ -6,9 +6,11 @@ import torch
 from PIL import Image
 from torch.utils.data import DataLoader
 from data.transformer import image_to_tensor
+from data.data_loader import classes
 
 
 class ImageClassifier(TorchWrapper):
+    classes = classes
 
     def __init__(self, name: str):
         if name == 'cnn':

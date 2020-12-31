@@ -31,7 +31,8 @@ name_img = os.path.basename(fn)
 
 files = {'file': (name_img, open(fn,'rb').read(), "image/png")}
 
-# r = requests.post(url, files=files)
+print(fn)
+
 with requests.Session() as s:
     r = s.post(url, files=files)
     print(r.status_code)
