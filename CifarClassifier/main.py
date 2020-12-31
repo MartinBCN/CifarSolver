@@ -5,6 +5,7 @@ from urllib.request import Request
 
 from pathlib import Path
 
+from model.image_classifier import ImageClassifier
 from model.torch_wrapper import TorchWrapper
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
@@ -29,9 +30,8 @@ app = FastAPI()
 
 model_dir = os.environ.get('MODEL_DIR', '/home/martin/Programming/Python/DeepLearning/Cifar10/models')
 figure_dir = os.environ.get('MODEL_DIR', '/home/martin/Programming/Python/DeepLearning/Cifar10/figures')
-# data = Path('/home/martin/Programming/Python/DeepLearning/Cifar10/data/cifar10_raw')
 name = 'test1'
-image_classifier = TorchWrapper.load(f'{model_dir}/{name}.ckpt')
+image_classifier = ImageClassifier.load(filepath=f'{model_dir}/{name}.ckpt', name='cnn')
 
 
 @app.post("/predict/", response_model=PredictionResponseDto)
