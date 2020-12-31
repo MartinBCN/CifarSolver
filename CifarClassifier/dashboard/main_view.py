@@ -3,10 +3,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 
 from dashboard.maindash import app
-# from tabs.map import generate_map
-#
-# from tabs.cases import generate_cases
-# from tabs.scatter_plots import generate_scatter
+from dashboard.tabs.tab_confusion import build_confusion
 from dashboard.tabs.tab_random_image import build_random_image
 
 
@@ -68,7 +65,7 @@ def build_tabs():
                         value="tab_confusion",
                         className="custom-tab",
                         selected_className="custom-tab--selected",
-                        children=html.Div()
+                        children=build_confusion()
     )
 
     tab_random_image = dcc.Tab(
