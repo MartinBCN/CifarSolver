@@ -3,7 +3,7 @@ from pathlib import Path
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 from data.data_loader import get_data_loader
-from model.torch_wrapper import TorchWrapper
+from model.image_classifier import ImageClassifier
 import matplotlib.pyplot as plt
 from data.data_loader import classes
 
@@ -15,7 +15,7 @@ data = Path('/home/martin/Programming/Python/DeepLearning/Cifar10/data/cifar10_r
 name = 'test1'
 
 
-model = TorchWrapper.load(f'{model_dir}/{name}.ckpt')
+model = ImageClassifier.load(filepath=f'{model_dir}/{name}.ckpt', name='cnn')
 
 test = get_data_loader(phase='test', data_dir=data)
 

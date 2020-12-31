@@ -11,9 +11,9 @@ from data.transformer import image_to_tensor
 class ImageClassifier(TorchWrapper):
 
     def __init__(self, name: str):
-        super().__init__(name)
         if name == 'cnn':
             self.model = CifarCNN()
+        super().__init__(name)
 
     def evaluate(self, data_loader: DataLoader):
 
@@ -67,12 +67,6 @@ class ImageClassifier(TorchWrapper):
                     else:
                         self.training_log[phase]['batch_loss'] = [loss.detach().cpu().numpy()]
 
-                    # if (i % 50) == 0:
-                    #     print(f'Batch {i}/{len(dataloader[phase])}, time elapsed: {datetime.now() - start}')
-                    #
-                    # if i == 2:
-                    #     break
-
                 # Log accuracy
                 accuracy = (np.concatenate(epoch_ground_truth) == np.concatenate(epoch_predicted_labels)).mean()
                 if 'accuracy' in self.training_log[phase].keys():
@@ -88,5 +82,6 @@ class ImageClassifier(TorchWrapper):
 
     def predict(self, image: Image):
         t = image_to_tensor(image)
-        label = self.model.predict(t)
-        return label
+        t = t.unsqueeze(0)
+        label = self.model.predict(t).detach().cpu().numpy()
+        return int(label)

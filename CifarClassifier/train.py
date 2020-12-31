@@ -16,7 +16,7 @@ model.set_optimizer()
 
 train_loader = get_data_loader('train', data)
 
-model.train(train_loader, 1)
+model.train(train_loader, 10)
 
 phases = ['train', 'validation']
 fields = ['batch_loss', 'epoch_loss', 'accuracy']

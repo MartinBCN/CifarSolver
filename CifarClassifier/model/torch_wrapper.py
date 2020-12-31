@@ -8,7 +8,8 @@ import torch.optim as optim
 class TorchWrapper:
     def __init__(self, name: str):
         self.name = name
-        self.model = nn.Module()
+        if self.model is None:
+            self.model = nn.Module()
 
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = None
@@ -23,6 +24,8 @@ class TorchWrapper:
         state = torch.load(filepath)
 
         new = cls(name)
+
+        new.set_optimizer()
 
         new.model.load_state_dict(state['model_state_dict'])
         new.optimizer.load_state_dict(state['optimizer_state_dict'])
