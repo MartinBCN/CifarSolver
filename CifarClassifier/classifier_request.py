@@ -1,3 +1,5 @@
+import json
+
 import curlify
 import os
 from pathlib import Path
@@ -42,3 +44,4 @@ with requests.Session() as s:
     print(r.status_code)
 
     print(r.text)
+    print(json.loads(r.content)['likely_class'])
