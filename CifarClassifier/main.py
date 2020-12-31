@@ -34,8 +34,14 @@ name = 'test1'
 image_classifier = ImageClassifier.load(filepath=f'{model_dir}/{name}.ckpt', name='cnn')
 
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+
 @app.post("/predict/", response_model=PredictionResponseDto)
 async def predict(file: UploadFile = File(...)):
+
     if file.content_type.startswith('image/') is False:
         raise HTTPException(status_code=400, detail=f'File \'{file.filename}\' is not an image.')
 
