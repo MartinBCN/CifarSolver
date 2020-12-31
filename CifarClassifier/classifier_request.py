@@ -29,7 +29,11 @@ url = 'http://localhost:8000/predict'
 
 name_img = os.path.basename(fn)
 
-files = {'file': (name_img, open(fn,'rb').read(), "image/png")}
+files = {
+    'file': (name_img,
+             open(fn,'rb').read(),
+             "image/png")
+}
 
 print(fn)
 

@@ -1,23 +1,12 @@
 # FastAPI implementation
 import os
-from urllib.request import Request
-
-
-from pathlib import Path
-
 from model.image_classifier import ImageClassifier
-from model.torch_wrapper import TorchWrapper
-
 from fastapi import FastAPI, File, UploadFile, HTTPException
-
 from PIL import Image
 import io
 import sys
 import logging
-
-
 from pydantic import BaseModel
-from typing import List
 
 
 class PredictionResponseDto(BaseModel):
